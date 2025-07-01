@@ -7,17 +7,18 @@ import clerkWebhooks from "./controllers/clerkWebhooks.js";
 
 connectDB()
 
-const app=express()
-app.use(cors())//Enable Cross-Origin Resource Sharing
+const app=express();
+app.use(cors());//Enable Cross-Origin Resource Sharing
 
 //Middleware
-app.use(express.json())
-app.use(clerkMiddleware())
+app.use(express.json());
+app.use(clerkMiddleware());
+app.use(express.json());
 
 //API to listen to Clerk Webhooks
 app.use("/api/clerk",clerkWebhooks);
 
-app.get('/',(req,res)=>res.send("API is working"))
+app.get('/',(req,res)=>res.send("API is working"));
 
 const PORT=process.env.PORT ||  3000;
 
