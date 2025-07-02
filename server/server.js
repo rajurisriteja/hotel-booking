@@ -3,21 +3,25 @@ import "dotenv/config";
 import cors from "cors";
 import connectDB from "./configs/db.js";
 import clerkWebhooks from "./controllers/clerkWebhooks.js";
+import bodyParser from "body-parser"; // ✅ Needed for raw body parsing
 
 connectDB();
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // ✅ Enable CORS globally
 
-// ✅ Only raw body for the Clerk webhook route
-app.post("/api/clerk", clerkWebhooks);
+// ✅ Apply raw body only for /api/clerk route
+app.post(
+  "/api/clerk",
+  bodyParser.raw({ type: "*/*" }), // Clerk needs raw body
+  clerkWebhooks
+);
 
-// ✅ Then use express.json for all other routes
+// ✅ Apply express.json AFTER webhook route
+app.use(express.json());
 
-
-// ✅ Add other routes if needed
+// ✅ Add other routes
 app.get("/", (req, res) => res.send("API is working"));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server is running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
