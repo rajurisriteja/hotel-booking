@@ -20,6 +20,7 @@
     "express": "^5.1.0",
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
+    "raw-body": "^3.0.0",
     "svix": "^1.68.0"
   },
   "devDependencies": {
