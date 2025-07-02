@@ -25,29 +25,34 @@ const clerkWebhooks=async(req,res)=>{
             username:data.first_name+" "+data.last_name,
             image:data.image_url,
         }
+        console.log("📥 Type:", type);
+        console.log("📦 User Data:", userData);
         //Switch cases for different events 
         switch (type) {
             case "user.created":{
                 await User.create(userData);
+                console.log("✅ User created");
                 break;
             }
             case "user.updated":{
                 await User.findByIdAndUpdate(data.id,userData);
+                console.log("✅ User updated");
                 break;
             }
             case "user.deleted":{
                 await User.findByIdAndDelete(data.id);
+                console.log("✅ User deleted");
                 break;
             }
             
             default:
-                break;
+                console.log("⚠️ Unknown event type:", type);
         }
-        res.json({success:true,message:"Webhook Recieved"})
+        res.status(200).json({ success: true });
         
     } catch (error) {
-        console.log(error.message);
-        res.json({success:false,message:error.message});
+        console.error("❌ Webhook error:", error);
+        res.status(400).json({ success: false, message: error.message });
     }
-}
+};
 export default clerkWebhooks;
