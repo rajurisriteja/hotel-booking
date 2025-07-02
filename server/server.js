@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./configs/db.js";
 import { clerkMiddleware } from '@clerk/express'
 import clerkWebhooks from "./controllers/clerkWebhooks.js";
+import bodyParser from "body-parser";
 
 connectDB();
 
@@ -14,10 +15,12 @@ app.use(cors());//Enable Cross-Origin Resource Sharing
 
 
 //API to listen to Clerk Webhooks
-app.use("/api/clerk",express.raw({type:"application/json"}));
+app.use("/api/clerk",bodyParser.raw({type:"*/*"}));
+app.use(express.json());
+app.use(clerkWebhooks());
 app.post("/api/clerk",clerkWebhooks);
 
-app.use(express.json());
+
 
 app.get('/',(req,res)=>res.send("API is working"));
 
