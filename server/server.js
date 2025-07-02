@@ -4,7 +4,7 @@ import cors from "cors";
 import connectDB from "./configs/db.js";
 import clerkWebhooks from "./controllers/clerkWebhooks.js";
 import bodyParser from "body-parser"; // ✅ Needed for raw body parsing
-
+import {clerkMiddleware} from '@clerk/express'
 connectDB();
 
 const app = express();
