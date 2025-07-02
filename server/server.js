@@ -7,13 +7,14 @@ import clerkWebhooks from "./controllers/clerkWebhooks.js";
 connectDB();
 
 const app = express();
-app.use(cors()); // ✅ Enable CORS globally
+app.use(cors());
+app.use(express.json()); // ✅ Enable CORS globally
 
 // ✅ Only raw body for the Clerk webhook route
-app.post("/api/clerk", express.raw({ type: "*/*" }), clerkWebhooks);
+app.post("/api/clerk", clerkWebhooks);
 
 // ✅ Then use express.json for all other routes
-app.use(express.json());
+
 
 // ✅ Add other routes if needed
 app.get("/", (req, res) => res.send("API is working"));
