@@ -19,6 +19,7 @@ app.post(
 
 // ✅ Apply express.json AFTER webhook route
 app.use(express.json());
+app.use(clerkMiddleware());
 
 // ✅ Add other routes
 app.get("/", (req, res) => res.send("API is working"));
