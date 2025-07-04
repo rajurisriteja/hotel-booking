@@ -11,17 +11,15 @@ const clerkWebhooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     };
 
-    // ✅ Use raw Buffer for verification (do NOT stringify)
-    const payload = whook.verify(req.body, headers);
+    // ✅ Verify the webhook and get parsed payload (DO NOT parse again)
+    const { data, type } = whook.verify(req.body, headers);
 
-    // Parse JSON body after verification
-    const { data, type } = JSON.parse(payload);
-
+    // ✅ Extract user data safely
     const userData = {
       _id: data.id,
-      email: data.email_addresses[0].email_address,
-      username: data.first_name+" "+ data.last_name,
-      image: data.image_url,
+      email: data.email_addresses?.[0]?.email_address || "",
+      username: `${data.first_name || ""} ${data.last_name || ""}`.trim(),
+      image: data.image_url || "",
     };
 
     switch (type) {
@@ -29,7 +27,7 @@ const clerkWebhooks = async (req, res) => {
         await User.create(userData);
         break;
       case "user.updated":
-        await User.findByIdAndUpdate(data.id, userData);
+        await User.findByIdAndUpdate(data.id, userData, { new: true });
         break;
       case "user.deleted":
         await User.findByIdAndDelete(data.id);
