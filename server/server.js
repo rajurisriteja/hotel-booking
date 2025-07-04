@@ -10,6 +10,9 @@ connectDB();
 const app = express();
 app.use(cors());
 
+// ✅ Apply express.json AFTER webhook route
+app.use(express.json());
+app.use(clerkMiddleware());
 // ✅ Apply raw body only for /api/clerk route
 app.post(
   "/api/clerk",
@@ -17,9 +20,7 @@ app.post(
   clerkWebhooks
 );
 
-// ✅ Apply express.json AFTER webhook route
-app.use(express.json());
-app.use(clerkMiddleware());
+
 
 // ✅ Add other routes
 app.get("/", (req, res) => res.send("API is working"));
